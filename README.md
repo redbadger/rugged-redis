@@ -58,9 +58,9 @@ Each instance of the backend consumes a single Redis connection.
 ## Internals
 
 Rugged Redis is written in C and interfaces with libgit2 on the C level.
-This is done for perfomance reasons. The ruby wrapper is only used as a
-delivery mechanism for the ODB, while RefDB backend structs holds the functions
-implementing the storage. The C backend implementations come from the
+This is done for perfomance reasons. The ruby wrapper servers as a
+delivery mechanism for both the ODB and RefDB backend C structs which hold the
+native functions implementing the storage itself. The C backend implementations come from the
 libgit2/libgit2-backends project.
 
 Both the ODB and RefDB objects are stored as hashes in Redis. The keys have the
