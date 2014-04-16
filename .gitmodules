@@ -1,0 +1,4 @@
+[submodule "vendor/libgit2-backends"]
+	path = vendor/libgit2-backends
+	url = https://github.com/redbadger/libgit2-backends.git
+	branch = redis-backend
