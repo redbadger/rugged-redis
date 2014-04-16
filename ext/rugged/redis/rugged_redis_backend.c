@@ -6,8 +6,8 @@ extern VALUE rb_cRuggedBackend;
 VALUE rb_cRuggedRedisBackend;
 
 typedef struct {
-  int odb_backend;
-  int refdb_backend;
+  hiredis_odb_backend   *odb_backend;
+  hiredis_refdb_backend *refdb_backend;
 } rugged_redis_backend;
 
 static void rb_rugged_redis_backend__free(rugged_redis_backend *backend)

@@ -2,7 +2,7 @@ require 'bundler/setup'
 Bundler.setup
 
 puts "Recompiling extension...\n"
-`rake compile`
+system("rake compile") or exit!
 
 require 'rugged-redis'
 include Rugged::Redis
