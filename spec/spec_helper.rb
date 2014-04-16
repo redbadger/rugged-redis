@@ -1,11 +1,11 @@
 require 'bundler/setup'
 Bundler.setup
 
-require 'rugged-redis'
-include Rugged::Redis
-
 puts "Recompiling extension...\n"
 `rake compile`
+
+require 'rugged-redis'
+include Rugged::Redis
 
 RSpec.configure do |config|
 end
