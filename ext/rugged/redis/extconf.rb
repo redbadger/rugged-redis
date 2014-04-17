@@ -45,11 +45,21 @@ end
 
 $LIBPATH.unshift "#{REDIS_BACKEND_DIR}/build"
 
+# Include rugged's header for the backend interface definition
+
 $CFLAGS << " -I#{RUGGED_EXT_DIR}"
+
+# Link against rugged's libgit2
+
 $CFLAGS << " -I#{LIBGIT2_DIR}/include"
+$LIBPATH.unshift "#{LIBGIT2_DIR}/build"
 
 unless have_library 'git2-redis'
   abort "ERROR: Failed to build libgit2 redis backend"
+end
+
+unless have_library 'hiredis'
+  abort "ERROR: Missing hiredis library"
 end
 
 create_makefile("rugged/rugged_redis")

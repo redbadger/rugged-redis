@@ -1,16 +1,8 @@
 #include <git2/sys/odb_backend.h>
 #include <git2/sys/refdb_backend.h>
-
 #include <rugged.h>
 
 #include "rugged_redis.h"
-
-// TODO move to rugged.h
-
-typedef struct _rugged_backend {
-  int (* odb_backend)(git_odb_backend **backend_out, struct _rugged_backend *backend, const char* path);
-  int (* refdb_backend)(git_refdb_backend **backend_out, struct _rugged_backend *backend, const char* path);
-} rugged_backend;
 
 extern VALUE rb_mRuggedRedis;
 extern VALUE rb_cRuggedBackend;
@@ -25,13 +17,16 @@ typedef struct {
   char *password;
 } rugged_redis_backend;
 
+// libgit2-redis interface
+
 int git_refdb_backend_hiredis(git_refdb_backend **backend_out, const char* prefix, const char* path, const char *host, int port, char* password);
 int git_odb_backend_hiredis(git_odb_backend **backend_out, const char* prefix, const char* path, const char *host, int port, char* password);
 
 static void rb_rugged_redis_backend__free(rugged_redis_backend *backend)
 {
   free(backend->host);
-  free(backend->password);
+  if (backend->password != NULL)
+    free(backend->password);
 
   // libgit will free the backends eventually
 
@@ -40,7 +35,7 @@ static void rb_rugged_redis_backend__free(rugged_redis_backend *backend)
   return;
 }
 
-// Backend factory functions
+// Redis backend factory functions
 
 static int rugged_redis_odb_backend(git_odb_backend **backend_out, rugged_backend *backend, const char* path)
 {
@@ -54,7 +49,7 @@ static int rugged_redis_refdb_backend(git_refdb_backend **backend_out, rugged_ba
   return git_refdb_backend_hiredis(backend_out, "rugged", path, rugged_backend->host, rugged_backend->port, rugged_backend->password);
 }
 
-// Backend initializer
+// Redis backend initializer
 
 static rugged_redis_backend *rugged_redis_backend_new(char* host, int port, char* password)
 {
