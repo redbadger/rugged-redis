@@ -29,6 +29,7 @@ REDIS_BACKEND_DIR = File.join(ROOT_DIR, 'vendor', 'libgit2-backends', 'redis')
 
 # TODO support pure gem install
 gem_root = Bundler.definition.specs.detect { |s| s.name == 'rugged' }.full_gem_path
+RUGGED_EXT_DIR = File.join(gem_root, 'ext', 'rugged')
 LIBGIT2_DIR = File.join(gem_root, 'vendor', 'libgit2')
 
 # Build Redis backend
@@ -43,6 +44,9 @@ Dir.chdir(REDIS_BACKEND_DIR) do
 end
 
 $LIBPATH.unshift "#{REDIS_BACKEND_DIR}/build"
+
+$CFLAGS << " -I#{RUGGED_EXT_DIR}"
+$CFLAGS << " -I#{LIBGIT2_DIR}/include"
 
 unless have_library 'git2-redis'
   abort "ERROR: Failed to build libgit2 redis backend"
