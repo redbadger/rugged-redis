@@ -28,7 +28,9 @@ ROOT_DIR = File.join(CWD, '..', '..', '..')
 REDIS_BACKEND_DIR = File.join(ROOT_DIR, 'vendor', 'libgit2-backends', 'redis')
 
 # TODO support pure gem install
+Bundler::CLI.new.invoke(:install)
 gem_root = Bundler.definition.specs.detect { |s| s.name == 'rugged' }.full_gem_path
+
 RUGGED_EXT_DIR = File.join(gem_root, 'ext', 'rugged')
 LIBGIT2_DIR = File.join(gem_root, 'vendor', 'libgit2')
 
