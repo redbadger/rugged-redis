@@ -64,4 +64,4 @@ unless have_library 'hiredis'
   abort "ERROR: Missing hiredis library"
 end
 
-create_makefile("rugged/rugged_redis")
+create_makefile("rugged/redis/rugged_redis")
