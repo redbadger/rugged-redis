@@ -60,7 +60,7 @@ unless have_library 'git2-redis'
   abort "ERROR: Failed to build libgit2 redis backend"
 end
 
-unless have_library 'hiredis'
+unless have_library('hiredis', 'redisConnect') && append_library($libs, 'hiredis')
   abort "ERROR: Missing hiredis library"
 end
 
