@@ -144,6 +144,9 @@ describe Backend do
       end
 
       it "iterates references" do
+        oid = repo.write("Test object for reference", :blob)
+        repo.references.create("refs/heads/master", oid)
+
         expect(repo.references).to be_a(Rugged::ReferenceCollection)
 
         n = 0
@@ -156,6 +159,9 @@ describe Backend do
       end
 
       it "iterates reference names" do
+        oid = repo.write("Test object for reference", :blob)
+        repo.references.create("refs/heads/master", oid)
+
         expect(repo.references).to be_a(Rugged::ReferenceCollection)
 
         n = 0
