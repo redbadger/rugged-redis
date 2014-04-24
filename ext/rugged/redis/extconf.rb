@@ -29,6 +29,11 @@ ROOT_DIR = File.join(CWD, '..', '..', '..')
 
 REDIS_BACKEND_DIR = File.join(ROOT_DIR, 'vendor', 'libgit2-backends', 'redis')
 
+puts "Making sure gems from github are checked out..."
+Dir.chdir(REDIS_BACKEND_DIR) do
+  sys('bundle install')
+end
+
 puts "Looking for rugged gem using bundler...\n"
 
 # TODO support non-bundler build
