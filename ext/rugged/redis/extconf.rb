@@ -34,6 +34,21 @@ gem_root = Bundler.definition.specs.detect { |s| s.name == 'rugged' }.full_gem_p
 RUGGED_EXT_DIR = File.join(gem_root, 'ext', 'rugged')
 LIBGIT2_DIR = File.join(gem_root, 'vendor', 'libgit2')
 
+# Build hiredis
+
+HIREDIS_DIR = File.join(ROOT_DIR, 'vendor', 'hiredis')
+unless File.directory?(HIREDIS_DIR)
+  STDERR.puts "vendor/hiredis missing, please checkout its submodule..."
+  exit 1
+end
+
+system("cd #{HIREDIS_DIR} && make static")
+
+dir_config('hiredis', HIREDIS_DIR, HIREDIS_DIR)
+unless have_library('hiredis', 'redisConnect')
+  abort "ERROR: Failed to build hiredis library"
+end
+
 # Build Redis backend
 
 Dir.chdir(REDIS_BACKEND_DIR) do
@@ -55,10 +70,6 @@ $CFLAGS << " -I#{RUGGED_EXT_DIR}"
 
 $CFLAGS << " -I#{LIBGIT2_DIR}/include"
 $LIBPATH.unshift "#{LIBGIT2_DIR}/build"
-
-unless have_library('hiredis', 'redisConnect') && append_library($libs, 'hiredis')
-  abort "ERROR: Missing hiredis library"
-end
 
 unless have_library 'git2-redis'
   abort "ERROR: Failed to build libgit2 redis backend"
