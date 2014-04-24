@@ -51,7 +51,7 @@ unless File.directory?(File.join(HIREDIS_DIR, 'hiredis'))
   exit 1
 end
 
-system("cd #{HIREDIS_DIR} && make static")
+system("cd #{HIREDIS_DIR}/hiredis && make static")
 
 puts("Using hiredis from #{HIREDIS_DIR}/hiredis\n")
 dir_config('hiredis', HIREDIS_DIR, File.join(HIREDIS_DIR, "hiredis"))
