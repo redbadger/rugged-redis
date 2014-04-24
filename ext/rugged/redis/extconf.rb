@@ -1,7 +1,10 @@
 require 'mkmf'
 
-require 'rubygems'
-require 'bundler'
+begin
+  require 'rubygems'
+  require 'rugged'
+rescue LoadError
+end
 
 $CFLAGS << " #{ENV["CFLAGS"]}"
 $CFLAGS << " -g"
@@ -25,23 +28,31 @@ if !(MAKE = find_executable('gmake') || find_executable('make'))
 end
 
 CWD = File.expand_path(File.dirname(__FILE__))
-ROOT_DIR = File.join(CWD, '..', '..', '..')
+ROOT_DIR = File.expand_path(File.join(CWD, '..', '..', '..'))
 
 REDIS_BACKEND_DIR = File.join(ROOT_DIR, 'vendor', 'libgit2-backends', 'redis')
 
-puts "Making sure gems from github are checked out..."
-Dir.chdir(REDIS_BACKEND_DIR) do
-  sys('bundle install')
+# FIXME there must be a better way than this...
+if defined?(Rugged::Repository)
+  puts "Looking for rugged (using ruby witchcraft)\n"
+  rugged_root = File.join(Rugged::Repository.instance_method(:lookup).source_location.first.split(File::SEPARATOR)[0..-4])
+else
+  puts "Looking for rugged (using absolute witchcraft and very strong assumptions...)\n"
+  gems = File.join(ROOT_DIR.split(File::SEPARATOR)[0..-2])
+
+  puts "Gems at: #{gems}"
+  rugged_root = ""
+  Dir.open(gems) do |d|
+    rugged = d.select { |it| it.match(/rugged-[a-z0-9]+$/) }.sort_by { |it| puts "Mtiming #{File.join(gems, it)}"; File.mtime(File.join(gems, it)) }.last
+    puts "Found #{rugged}"
+    rugged_root = File.join(gems, rugged)
+  end
 end
 
-puts "Looking for rugged gem using bundler...\n"
-
-# TODO support non-bundler build
-gem_root = Bundler.definition.specs.detect { |s| s.name == 'rugged' }.full_gem_path
-RUGGED_EXT_DIR = File.join(gem_root, 'ext', 'rugged')
+RUGGED_EXT_DIR = File.join(rugged_root, 'ext', 'rugged')
 
 puts "Found rugged at #{RUGGED_EXT_DIR}"
-LIBGIT2_DIR = File.join(gem_root, 'vendor', 'libgit2')
+LIBGIT2_DIR = File.join(rugged_root, 'vendor', 'libgit2')
 
 # Build hiredis
 
