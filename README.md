@@ -17,20 +17,16 @@ And then execute:
 
     $ bundle install
 
-Or install it yourself as:
-
-    $ gem install rugged-redis
-
 **Note** that to use this you need a version of `rugged` that supports backends, which
-is currently none. The redbadger fork will support redis backend soon.
+is currently only the redbadger fork.
 
 ```ruby
-gem 'rugged', :git => 'https://github.com/redbadger/rugged', :branch => 'backends'
+gem 'rugged', :git => 'https://github.com/redbadger/rugged', :branch => 'backends-wip'
 ```
 
 ## Usage
 
-Important thing to note is you can only use the redis backend for bare repositories.
+Important thing to note is you can only use the redis backend for **bare** repositories.
 
 Create the backend:
 
@@ -57,11 +53,18 @@ Each instance of the backend consumes a single Redis connection.
 
 ## Internals
 
-Rugged Redis is written in C and interfaces with libgit2 on the C level.
-This is done for perfomance reasons. The ruby wrapper serves as a
-delivery mechanism for both the ODB and RefDB backend C structs which hold the
-native functions implementing the storage itself. The C backend implementations come from the
-libgit2/libgit2-backends project.
+Rugged redis is just a wrapper for the C implementation of the redis backend.
+The C backend implementations come from the
+[libgit2-backends](https://github.com/libgit2/libgit2-backends) project.
+
+Rugged redis implements a `Rugged::Backend` subclass and also adds a redis specific
+struct containing the `rugged_backend` from `rugged.h` and the connection
+configuration. The functions pointed to by this struct then call the respective
+functions from `libgit2-redis` (see [libgit2-backends](https://github.com/libgit2/libgit2-backends))
+and get back the ODB and RefDB backends which can be used to create a `git_repository`. 
+All the subsequent reads and writes go directly through libgit2 to libgit2-redis.
+
+## Storage format
 
 Both the ODB and RefDB objects are stored as hashes in Redis. The keys have the
 following general structure:
@@ -85,19 +88,19 @@ The RefDB hashes have two keys:
 *  `type` reference type as a number (`GIT_REF_OID` or `GIT_REF_SYMBOLIC` in libgit2)
 *  `target` reference target as a string - either an OID as a string, or a symbolic target
 
-### Redis connection
+## Redis connection
 
 Both backends share a single Redis connection across all their instances, which is important
 when you use a service that limits the number of connections. Each ruby process still gets its own
 connection.
 
-### Missing features
+## Missing features
 
 The redis backend doesn't yet support reflog. Rugged Redis is also currently the only test suite of the
 backend implementation, which isn't ideal.
 
-Another big missing feature is packed format support for ODB, which means no support for network
-transfers or importing existing repos using packed format.
+The big missing feature is packed format support for ODB, which means no support for network
+transfers or importing existing repos using packed format. 
 
 ## Contributing
 
