@@ -31,7 +31,6 @@ Important thing to note is you can only use the redis backend for **bare** repos
 Create the backend:
 
 ```ruby
-
 require 'rugged-redis'
 
 redis_backend = Rugged::Redis::Backend.new(host: '127.0.0.1', port: 6379, password: 'muchsecretwow')
@@ -51,6 +50,33 @@ repo = Rugged::Repository.init_at('repo-name', :bare, backend: redis_backend)
 
 Each instance of the backend consumes a single Redis connection.
 
+## Build & test
+
+Because rugged-redis depends on the latest version of rugged from it's Gemfile, you need to run
+most build related commands doing compilation using `bundle exec`, for the `extconf.rb` to be
+able to find rugged. This will eventually get fixed when rugged with backend support is released.
+
+To build everything run
+
+```
+bundle exec rake compile
+```
+
+To clean up everything run
+
+```
+bundle exec rake clean clobber
+rm -rf vendor/libgit2-backends/redis/build
+```
+
+You can run tests with
+
+```
+rspec
+```
+
+Running rspec also rebuilds everything for convenience.
+
 ## Internals
 
 Rugged redis is just a wrapper for the C implementation of the redis backend.
@@ -61,7 +87,7 @@ Rugged redis implements a `Rugged::Backend` subclass and also adds a redis speci
 struct containing the `rugged_backend` from `rugged.h` and the connection
 configuration. The functions pointed to by this struct then call the respective
 functions from `libgit2-redis` (see [libgit2-backends](https://github.com/libgit2/libgit2-backends))
-and get back the ODB and RefDB backends which can be used to create a `git_repository`. 
+and get back the ODB and RefDB backends which can be used to create a `git_repository`.
 All the subsequent reads and writes go directly through libgit2 to libgit2-redis.
 
 ## Storage format
@@ -100,7 +126,7 @@ The redis backend doesn't yet support reflog. Rugged Redis is also currently the
 backend implementation, which isn't ideal.
 
 The big missing feature is packed format support for ODB, which means no support for network
-transfers or importing existing repos using packed format. 
+transfers or importing existing repos using packed format.
 
 ## Contributing
 
