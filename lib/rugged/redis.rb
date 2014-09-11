@@ -1,4 +1,3 @@
-require "rugged/backend"
 require "rugged/redis/version"
 
 module Rugged
