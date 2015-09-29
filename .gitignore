@@ -17,3 +17,4 @@ tmp
 
 lib/**/*.bundle
 lib/**/*.so
+Gemfile.lock
