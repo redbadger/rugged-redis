@@ -1,5 +1,7 @@
 # Redis backend for rugged
 
+[![Build Status](https://travis-ci.org/redbadger/rugged-redis.svg?branch=master)](https://travis-ci.org/redbadger/rugged-redis)
+
 Enables rugged to store git objects and references into Redis.
 
 ### Warning
