@@ -17,13 +17,6 @@ And then execute:
 
     $ bundle install
 
-**Note** that to use this you need a version of `rugged` that supports backends, which
-is currently only the redbadger fork.
-
-```ruby
-gem 'rugged', :git => 'https://github.com/redbadger/rugged', :branch => 'backends-wip'
-```
-
 ## Usage
 
 Important thing to note is you can only use the redis backend for **bare** repositories.
