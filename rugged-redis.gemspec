@@ -13,8 +13,13 @@ Gem::Specification.new do |spec|
   spec.homepage      = ""
   spec.license       = "MIT"
 
-  spec.files         = Dir.glob("lib/**/*.rb")
-  spec.files         += Dir.glob("ext/**/*.[ch]")
+  spec.files         = Dir["lib/**/*.rb"] +
+                       Dir["ext/**/*.{c,h}"] +
+                       Dir["vendor/hiredis/*.{c,h}"] +
+                       Dir["vendor/hiredis/Makefile"] +
+                       Dir["vendor/libgit2-backends/CMake/*.cmake"] +
+                       Dir["vendor/libgit2-backends/redis/*.{c,h}"] +
+                       Dir["vendor/libgit2-backends/redis/CMakeLists.txt"]
 
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
