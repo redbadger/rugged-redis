@@ -1,5 +1,3 @@
-require 'rspec/autorun'
-
 require 'spec_helper'
 
 describe Backend do
@@ -50,10 +48,10 @@ describe Backend do
 
       it "can test existence" do
         oid1 = "1000000000000000000000000000000000000001"
-        expect(repo.exists?(oid1)).to be_false
+        expect(repo.exists?(oid1)).to be_falsey
 
         oid2 = repo.write("Test content", :blob)
-        expect(repo.exists?(oid2)).to be_true
+        expect(repo.exists?(oid2)).to be_truthy
       end
 
       it "can read back" do

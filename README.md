@@ -1,5 +1,7 @@
 # Redis backend for rugged
 
+[![Build Status](https://travis-ci.org/redbadger/rugged-redis.svg?branch=master)](https://travis-ci.org/redbadger/rugged-redis)
+
 Enables rugged to store git objects and references into Redis.
 
 ### Warning
@@ -16,13 +18,6 @@ Add this line to your application's Gemfile:
 And then execute:
 
     $ bundle install
-
-**Note** that to use this you need a version of `rugged` that supports backends, which
-is currently only the redbadger fork.
-
-```ruby
-gem 'rugged', :git => 'https://github.com/redbadger/rugged', :branch => 'backends-wip'
-```
 
 ## Usage
 

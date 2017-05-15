@@ -1,10 +1,6 @@
 require 'mkmf'
-
-begin
-  require 'rubygems'
-  require 'rugged'
-rescue LoadError
-end
+require 'rubygems'
+require 'rugged'
 
 $CFLAGS << " #{ENV["CFLAGS"]}"
 $CFLAGS << " -g"
@@ -32,30 +28,13 @@ ROOT_DIR = File.expand_path(File.join(CWD, '..', '..', '..'))
 
 REDIS_BACKEND_DIR = File.join(ROOT_DIR, 'vendor', 'libgit2-backends', 'redis')
 
-# FIXME there must be a better way than this...
-if defined?(Rugged::Repository)
-  puts "Looking for rugged (using ruby witchcraft)\n"
-  rugged_root = File.join(Rugged::Repository.instance_method(:lookup).source_location.first.split(File::SEPARATOR)[0..-4])
-else
-  puts "Looking for rugged (using absolute witchcraft and very strong assumptions...)\n"
-  gems = File.join(ROOT_DIR.split(File::SEPARATOR)[0..-2])
-
-  puts "Gems at: #{gems}"
-  rugged_root = ""
-  Dir.open(gems) do |d|
-    rugged = d.select { |it| it.match(/rugged-[a-z0-9]+$/) }.sort_by { |it| puts "Mtiming #{File.join(gems, it)}"; File.mtime(File.join(gems, it)) }.last
-    puts "Found #{rugged}"
-    rugged_root = File.join(gems, rugged)
-  end
-end
-
+rugged_spec = Gem::Specification.find {|s| s.name == 'rugged' }
+rugged_root = rugged_spec.gem_dir
 RUGGED_EXT_DIR = File.join(rugged_root, 'ext', 'rugged')
-
 puts "Found rugged at #{RUGGED_EXT_DIR}"
 LIBGIT2_DIR = File.join(rugged_root, 'vendor', 'libgit2')
 
 # Build hiredis
-
 HIREDIS_DIR = File.join(ROOT_DIR, 'vendor') # because hiredis headers are included as hiredis/hiredis.h
 unless File.directory?(File.join(HIREDIS_DIR, 'hiredis'))
   STDERR.puts "vendor/hiredis missing, please checkout its submodule..."
