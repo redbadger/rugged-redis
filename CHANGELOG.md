@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 ## [Unreleased]
+No changes since 0.2.2
+
+## [0.2.2] - 2017-05-16
 ### Added
 - Change log ([@haines])
 
@@ -33,7 +36,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - `Rugged::Redis::Backend`: a Redis backend for Rugged ([@charypar])
 
 
-[Unreleased]: https://github.com/redbadger/rugged-redis/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/redbadger/rugged-redis/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/redbadger/rugged-redis/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/redbadger/rugged-redis/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/redbadger/rugged-redis/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/redbadger/rugged-redis/compare/v0.1.0...v0.1.1
