@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - Change log (@haines)
 
+### Fixed
+- Require `rugged` explicitly (#6) (@haines)
+
 
 ## [0.2.1] - 2017-05-15
 ### Fixed
